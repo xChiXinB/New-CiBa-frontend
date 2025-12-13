@@ -77,12 +77,19 @@ export const useWordStore = defineStore('word', () => {
   /**
    * 重试查询
    */
-  async function retryWord(id: string) {
+  async function retryWord(id: string, newText?: string) {
     const index = words.value.findIndex(w => w.id === id);
     if (index === -1) return;
 
     const wordItem = words.value[index];
     if (!wordItem) return;
+
+    // 如果提供了新文本，更新单词拼写
+    if (newText) {
+      const trimmedNewText = newText.trim().toLowerCase();
+      if (!trimmedNewText) return;
+      wordItem.text = trimmedNewText;
+    }
 
     wordItem.status = 'loading';
     wordItem.errorMessage = undefined;

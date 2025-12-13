@@ -18,7 +18,15 @@
           
           <!-- 单词 -->
           <td class="whitespace-nowrap px-3 py-4 text-sm font-bold text-gray-900">
-            {{ word.text }}
+            <div v-if="word.status === 'error'">
+               <input 
+                type="text" 
+                v-model="word.text" 
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-red-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
+                @keydown.enter="store.retryWord(word.id, word.text)"
+               />
+            </div>
+            <span v-else>{{ word.text }}</span>
           </td>
           
           <!-- 释义 (可编辑) -->
@@ -32,20 +40,30 @@
             </div>
             <div v-else-if="word.status === 'error'" class="text-red-500 flex items-center">
               <span>查询失败: {{ word.errorMessage }}</span>
-              <button @click="store.retryWord(word.id)" class="ml-2 text-xs underline hover:text-red-700">重试</button>
             </div>
             <textarea
               v-else
               v-model="word.translation"
+              :ref="(el) => setTextareaRef(el, word.id)"
               rows="1"
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 resize-none overflow-hidden"
-              @input="autoResize($event)"
-              @focus="autoResize($event)"
+              @input="autoResize($event.target as HTMLTextAreaElement)"
+              @focus="autoResize($event.target as HTMLTextAreaElement)"
             ></textarea>
           </td>
 
           <!-- 操作 -->
-          <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
+          <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6 space-x-2">
+            <button 
+              v-if="word.status === 'error'"
+              @click="store.retryWord(word.id, word.text)" 
+              class="text-blue-600 hover:text-blue-900 transition-colors p-1 rounded hover:bg-blue-50"
+              title="重试"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+            </button>
             <button 
               @click="store.removeWord(word.id)" 
               class="text-red-600 hover:text-red-900 transition-colors p-1 rounded hover:bg-red-50"
@@ -71,14 +89,35 @@
 
 <script setup lang="ts">
 import { useWordStore } from '../../stores/word';
-import { nextTick } from 'vue';
+import { nextTick, watch, ref } from 'vue';
 
 const store = useWordStore();
+const textareaRefs = ref<Map<string, HTMLTextAreaElement>>(new Map());
+
+const setTextareaRef = (el: any, id: string) => {
+  if (el) {
+    textareaRefs.value.set(id, el as HTMLTextAreaElement);
+  } else {
+    textareaRefs.value.delete(id);
+  }
+};
 
 // Textarea 高度自适应
-const autoResize = (event: Event) => {
-  const target = event.target as HTMLTextAreaElement;
+const autoResize = (target: HTMLTextAreaElement) => {
+  if (!target) return;
   target.style.height = 'auto';
   target.style.height = target.scrollHeight + 'px';
 };
+
+// 监听单词列表变化，当状态变为 success 时，自动调整高度
+watch(() => store.words, (newWords) => {
+  newWords.forEach(word => {
+    if (word.status === 'success') {
+      nextTick(() => {
+        const el = textareaRefs.value.get(word.id);
+        if (el) autoResize(el);
+      });
+    }
+  });
+}, { deep: true });
 </script>
