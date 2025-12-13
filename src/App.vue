@@ -1,11 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import Sidebar from './components/layout/Sidebar.vue'
+</script>
 
 <template>
-  <h1 class="bg-amber-200">You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <div class="flex h-screen w-screen overflow-hidden bg-gray-50">
+    <!-- 左侧导航 -->
+    <Sidebar />
+
+    <!-- 右侧主内容区 -->
+    <main class="flex-1 overflow-auto relative">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
-<style scoped></style>
+<style>
+/* 全局重置或基础样式 */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+</style>
