@@ -20,7 +20,7 @@
                     >
                         <!-- Icon Placeholder -->
                         <div class="w-5 h-5 mr-3 flex items-center justify-center">
-                            <img v-if="item.icon" :src="item.icon" :alt="item.name" class="w-full h-full filter invert" />
+                            <Icon v-if="item.icon" :name="item.icon" class="w-full h-full" />
                             <span v-else class="w-2 h-2 rounded-full bg-current"></span>
                         </div>
                         
@@ -39,15 +39,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-
-// 导入图标资源
-// 使用 new URL(...) 是 Vite 中引用静态资源的标准方式
-const getIconUrl = (name: string) => {
-    return new URL(`../../assets/icons/${name}`, import.meta.url).href
-}
+import Icon from '../common/Icon.vue';
 
 const menuItems = computed(() => [
-    { name: '查词', path: '/', icon: getIconUrl('search.svg') },
-    { name: '文章', path: '/passage', icon: getIconUrl('book.svg') },
+    { name: '查词', path: '/', icon: 'search' },
+    { name: '文章', path: '/passage', icon: 'book' },
 ]);
 </script>
