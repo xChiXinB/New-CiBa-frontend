@@ -1,5 +1,8 @@
 <template>
-  <div aria-live="assertive" class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-end sm:p-6 z-50">
+  <div
+    aria-live="assertive"
+    class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-end sm:p-6 z-50"
+  >
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
       <TransitionGroup
         enter-active-class="transform ease-out duration-300 transition"

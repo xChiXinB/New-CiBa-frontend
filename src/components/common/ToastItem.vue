@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="pointer-events-auto mb-3 flex w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition-all duration-300"
     :class="{
       'border-l-4 border-green-500': type === 'success',
@@ -23,7 +23,11 @@
         <p class="text-sm font-medium text-gray-900">{{ message }}</p>
       </div>
       <div class="ml-4 flex shrink-0">
-        <button type="button" @click="$emit('close')" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+        <button
+          type="button"
+          @click="$emit('close')"
+          class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        >
           <span class="sr-only">Close</span>
           <Icon name="x-mark" class="h-5 w-5" />
         </button>

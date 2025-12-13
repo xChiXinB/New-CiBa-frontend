@@ -5,8 +5,8 @@ import { useNotificationStore } from './notification';
 import * as XLSX from 'xlsx';
 
 export interface WordItem {
-  id: string;          // 唯一标识
-  text: string;        // 单词拼写
+  id: string; // 唯一标识
+  text: string; // 单词拼写
   translation: string; // 释义
   status: 'loading' | 'success' | 'error'; // 状态
   errorMessage?: string; // 错误信息
@@ -27,9 +27,13 @@ export const useWordStore = defineStore('word', () => {
   }
 
   // 监听 words 变化，自动保存到 LocalStorage
-  watch(words, (newWords) => {
-    localStorage.setItem('ciba_words', JSON.stringify(newWords));
-  }, { deep: true });
+  watch(
+    words,
+    (newWords) => {
+      localStorage.setItem('ciba_words', JSON.stringify(newWords));
+    },
+    { deep: true },
+  );
 
   /**
    * 添加单词并自动查询
@@ -39,7 +43,7 @@ export const useWordStore = defineStore('word', () => {
     if (!trimmedText) return;
 
     // 修复7: 检查是否已存在
-    if (words.value.some(w => w.text.toLowerCase() === trimmedText)) {
+    if (words.value.some((w) => w.text.toLowerCase() === trimmedText)) {
       notificationStore.show(`单词 "${trimmedText}" 已存在`, 'warning');
       return;
     }
@@ -58,14 +62,14 @@ export const useWordStore = defineStore('word', () => {
     try {
       const result = await api.fetchTranslation(trimmedText);
       // 更新释义
-      const index = words.value.findIndex(w => w.id === id);
+      const index = words.value.findIndex((w) => w.id === id);
       if (index !== -1 && words.value[index]) {
         words.value[index].translation = result.data.translation;
         words.value[index].status = 'success';
         notificationStore.show(`查询成功: ${trimmedText}`, 'success');
       }
     } catch (error: any) {
-      const index = words.value.findIndex(w => w.id === id);
+      const index = words.value.findIndex((w) => w.id === id);
       if (index !== -1 && words.value[index]) {
         words.value[index].status = 'error';
         words.value[index].errorMessage = error.message;
@@ -78,7 +82,7 @@ export const useWordStore = defineStore('word', () => {
    * 重试查询
    */
   async function retryWord(id: string, newText?: string) {
-    const index = words.value.findIndex(w => w.id === id);
+    const index = words.value.findIndex((w) => w.id === id);
     if (index === -1) return;
 
     const wordItem = words.value[index];
@@ -96,14 +100,15 @@ export const useWordStore = defineStore('word', () => {
 
     try {
       const result = await api.fetchTranslation(wordItem.text);
-      const currentIndex = words.value.findIndex(w => w.id === id);
-      if (currentIndex !== -1 && words.value[currentIndex]) { // 再次检查索引，防止异步期间被删除
+      const currentIndex = words.value.findIndex((w) => w.id === id);
+      if (currentIndex !== -1 && words.value[currentIndex]) {
+        // 再次检查索引，防止异步期间被删除
         words.value[currentIndex].translation = result.data.translation;
         words.value[currentIndex].status = 'success';
         notificationStore.show(`重试成功: ${wordItem.text}`, 'success');
       }
     } catch (error: any) {
-      const currentIndex = words.value.findIndex(w => w.id === id);
+      const currentIndex = words.value.findIndex((w) => w.id === id);
       if (currentIndex !== -1 && words.value[currentIndex]) {
         words.value[currentIndex].status = 'error';
         words.value[currentIndex].errorMessage = error.message;
@@ -116,7 +121,7 @@ export const useWordStore = defineStore('word', () => {
    * 删除单词
    */
   function removeWord(id: string) {
-    const index = words.value.findIndex(w => w.id === id);
+    const index = words.value.findIndex((w) => w.id === id);
     if (index !== -1 && words.value[index]) {
       const removedWord = words.value[index].text;
       words.value.splice(index, 1);
@@ -144,20 +149,20 @@ export const useWordStore = defineStore('word', () => {
 
     // 准备数据：序号, 单词, 释义
     const data = words.value.map((w, index) => ({
-      '序号': words.value.length - index, // 倒序序号，或者 index + 1
-      '单词': w.text,
-      '释义': w.translation
+      序号: words.value.length - index, // 倒序序号，或者 index + 1
+      单词: w.text,
+      释义: w.translation,
     }));
 
     // 创建工作簿
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "生词本");
+    XLSX.utils.book_append_sheet(wb, ws, '生词本');
 
     // 导出文件
     const fileName = `生词记录_${new Date().toISOString().slice(0, 10)}.xlsx`;
     XLSX.writeFile(wb, fileName);
-    
+
     notificationStore.show('导出成功！', 'success');
   }
 
@@ -167,6 +172,6 @@ export const useWordStore = defineStore('word', () => {
     retryWord,
     removeWord,
     clearAll,
-    exportToExcel
+    exportToExcel,
   };
 });

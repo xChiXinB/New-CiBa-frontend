@@ -17,10 +17,14 @@ export const useNotificationStore = defineStore('notification', () => {
    * @param type 通知类型 (默认 info)
    * @param duration 持续时间 (毫秒, 默认 3000)
    */
-  function show(message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info', duration = 3000) {
+  function show(
+    message: string,
+    type: 'success' | 'error' | 'info' | 'warning' = 'info',
+    duration = 3000,
+  ) {
     const id = nextId++;
     const notification: Notification = { id, message, type };
-    
+
     notifications.value.push(notification);
 
     // 自动移除

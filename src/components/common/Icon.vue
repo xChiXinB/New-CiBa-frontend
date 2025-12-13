@@ -1,7 +1,7 @@
 <template>
-  <i 
-    v-if="svgContent" 
-    v-html="svgContent" 
+  <i
+    v-if="svgContent"
+    v-html="svgContent"
     class="inline-block select-none leading-none"
     :class="customClass"
     role="img"
@@ -17,7 +17,11 @@ const props = defineProps<{
   class?: string;
 }>();
 
-const icons = import.meta.glob('../../assets/icons/*.svg', { query: '?raw', import: 'default', eager: true });
+const icons = import.meta.glob('../../assets/icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
 
 const svgContent = computed(() => {
   const fileName = props.name.endsWith('.svg') ? props.name : `${props.name}.svg`;

@@ -18,7 +18,7 @@ apiClient.interceptors.response.use(
     // 这里可以做统一的错误日志记录
     console.error('API Error:', error);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default {
