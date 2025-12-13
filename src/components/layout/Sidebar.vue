@@ -5,8 +5,8 @@
     >
         <!-- Logo / Title Area -->
         <div class="h-16 flex items-center justify-center border-b border-slate-700 overflow-hidden whitespace-nowrap">
-            <span v-if="!isCollapsed" class="text-xl font-bold tracking-wider">词霸 Refactor</span>
-            <span v-else class="text-xl font-bold tracking-wider">词</span>
+            <span v-if="!isCollapsed" class="text-xl font-bold tracking-wider">词霸 CiBa</span>
+            <span v-else class="text-xl font-bold tracking-wider">霸</span>
         </div>
 
         <!-- Navigation -->
@@ -49,7 +49,7 @@
 
         <!-- Footer / User Info (Optional) -->
         <div v-if="!isCollapsed" class="pb-4 text-xs text-slate-500 text-center whitespace-nowrap">
-            v1.0.0 Dev
+            dev version
         </div>
     </aside>
 </template>
