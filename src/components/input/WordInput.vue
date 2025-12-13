@@ -8,6 +8,7 @@
         class="block w-full rounded-lg border-0 py-4 pl-4 pr-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-lg sm:leading-6 transition-shadow"
         placeholder="请输入你的单词 (Enter 提交)"
         @keydown.enter="handleSubmit"
+        @paste="handlePaste"
       />
       <div class="absolute inset-y-0 right-0 flex items-center pr-3">
         <span class="text-gray-400 text-sm mr-2 hidden sm:inline">Enter ↵</span>
@@ -41,23 +42,16 @@ const focusInput = () => {
   inputRef.value?.focus();
 };
 
-// 监听快捷键
-const handleKeydown = (e: KeyboardEvent) => {
-  // 修复6: Ctrl+V 粘贴并查词
-  if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
-    // 如果焦点已经在输入框，浏览器会处理粘贴，我们只需要监听 input 事件或在 nextTick 获取值
-    // 但为了“立刻触发”，我们需要手动读取剪贴板
-    navigator.clipboard.readText().then(text => {
-      if (text) {
-        store.addWord(text);
-        // 如果焦点在输入框，清空它以免重复
-        if (document.activeElement === inputRef.value) {
-           inputValue.value = '';
-        }
-      }
-    }).catch(err => {
-      console.error('无法读取剪贴板:', err);
-    });
+// 修复6: 粘贴并查词 (无需读取剪贴板权限)
+const handlePaste = (e: ClipboardEvent) => {
+  const text = e.clipboardData?.getData('text');
+  if (text) {
+    // 阻止默认粘贴行为，手动处理
+    e.preventDefault();
+    // 立即提交
+    store.addWord(text);
+    // 清空输入框 (虽然 preventDefault 阻止了粘贴，但为了保险)
+    inputValue.value = '';
   }
 };
 
@@ -69,11 +63,9 @@ const handleWindowFocus = () => {
 onMounted(() => {
   focusInput();
   window.addEventListener('focus', handleWindowFocus);
-  window.addEventListener('keydown', handleKeydown); // 添加全局监听
 });
 
 onUnmounted(() => {
   window.removeEventListener('focus', handleWindowFocus);
-  window.removeEventListener('keydown', handleKeydown); // 移除监听
 });
 </script>
