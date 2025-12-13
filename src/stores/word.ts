@@ -35,14 +35,14 @@ export const useWordStore = defineStore('word', () => {
    * 添加单词并自动查询
    */
   async function addWord(text: string) {
-    const trimmedText = text.trim();
+    const trimmedText = text.trim().toLowerCase(); // 修复8: 强制小写
     if (!trimmedText) return;
 
-    // 检查是否已存在 (可选，如果允许重复则去掉此判断)
-    // if (words.value.some(w => w.text.toLowerCase() === trimmedText.toLowerCase())) {
-    //   notificationStore.show(`单词 "${trimmedText}" 已存在`, 'warning');
-    //   return;
-    // }
+    // 修复7: 检查是否已存在
+    if (words.value.some(w => w.text.toLowerCase() === trimmedText)) {
+      notificationStore.show(`单词 "${trimmedText}" 已存在`, 'warning');
+      return;
+    }
 
     const id = Date.now().toString() + Math.random().toString(36).substring(2);
     const newWord: WordItem = {
@@ -52,8 +52,8 @@ export const useWordStore = defineStore('word', () => {
       status: 'loading',
     };
 
-    // 插入到列表最前面
-    words.value.unshift(newWord);
+    // 修复1: 插入到列表最后面 (push)
+    words.value.push(newWord);
 
     try {
       const result = await api.fetchTranslation(trimmedText);
@@ -110,8 +110,11 @@ export const useWordStore = defineStore('word', () => {
    */
   function removeWord(id: string) {
     const index = words.value.findIndex(w => w.id === id);
-    if (index !== -1) {
+    if (index !== -1 && words.value[index]) {
+      const removedWord = words.value[index].text;
       words.value.splice(index, 1);
+      // 修复5: 删除通知
+      notificationStore.show(`已删除单词: ${removedWord}`, 'info');
     }
   }
 

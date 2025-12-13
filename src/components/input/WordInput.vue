@@ -43,9 +43,22 @@ const focusInput = () => {
 
 // 监听快捷键
 const handleKeydown = (e: KeyboardEvent) => {
-  // Ctrl+V 粘贴并查词 (浏览器默认行为会粘贴到输入框，我们需要拦截并直接提交，或者让它粘贴后我们检测)
-  // 更好的体验是：如果焦点不在输入框，Ctrl+V 会聚焦并粘贴。
-  // 这里我们简单实现：监听全局 focus，保持输入框聚焦
+  // 修复6: Ctrl+V 粘贴并查词
+  if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+    // 如果焦点已经在输入框，浏览器会处理粘贴，我们只需要监听 input 事件或在 nextTick 获取值
+    // 但为了“立刻触发”，我们需要手动读取剪贴板
+    navigator.clipboard.readText().then(text => {
+      if (text) {
+        store.addWord(text);
+        // 如果焦点在输入框，清空它以免重复
+        if (document.activeElement === inputRef.value) {
+           inputValue.value = '';
+        }
+      }
+    }).catch(err => {
+      console.error('无法读取剪贴板:', err);
+    });
+  }
 };
 
 // 保持输入框聚焦 (参考旧版逻辑)
@@ -56,9 +69,11 @@ const handleWindowFocus = () => {
 onMounted(() => {
   focusInput();
   window.addEventListener('focus', handleWindowFocus);
+  window.addEventListener('keydown', handleKeydown); // 添加全局监听
 });
 
 onUnmounted(() => {
   window.removeEventListener('focus', handleWindowFocus);
+  window.removeEventListener('keydown', handleKeydown); // 移除监听
 });
 </script>
