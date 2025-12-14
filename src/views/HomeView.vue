@@ -45,23 +45,25 @@
       class="absolute right-0 top-0 h-full w-1/2 bg-white shadow-xl transition-transform duration-500 ease-in-out transform z-10"
       :class="isPassageOpen ? 'translate-x-0' : 'translate-x-full'"
     >
-      <div class="p-6 h-full overflow-y-auto">
-        <h2 class="text-xl font-bold mb-4 text-gray-800">从文章录入</h2>
-        <div
-          class="p-10 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg h-64 flex items-center justify-center"
-        >
-          <p>文章功能开发中...</p>
+      <div class="p-6 h-full overflow-y-auto flex flex-col">
+        <h2 class="text-xl font-bold mb-4 text-gray-800 shrink-0">从文章录入</h2>
+        
+        <!-- 文章输入区 -->
+        <div class="shrink-0">
+          <PassageInput />
         </div>
-      </div>
-    </div>
-  </div>
-</template>
+
+        <!-- 文章展示区 -->
+        <div class="flex-1 overflow-y-auto min-h-0">
+          <PassageDisplay />
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import WordInput from '../components/input/WordInput.vue';
 import WordTable from '../components/input/WordTable.vue';
+import PassageInput from '../components/passage/PassageInput.vue';
+import PassageDisplay from '../components/passage/PassageDisplay.vue';
 import { useWordStore } from '../stores/word';
 
 const store = useWordStore();
