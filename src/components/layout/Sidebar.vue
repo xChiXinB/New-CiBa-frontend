@@ -65,7 +65,7 @@ const userManuallyToggled = ref(false);
 
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
-  userManuallyToggled.value = true;
+  userManuallyToggled.value = isCollapsed.value;
 };
 
 const handleResize = () => {
