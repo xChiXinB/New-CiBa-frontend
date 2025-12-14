@@ -19,12 +19,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-        <WordRow
-          v-for="(word, index) in store.words"
-          :key="word.id"
-          :word="word"
-          :index="index"
-        />
+        <WordRow v-for="(word, index) in store.words" :key="word.id" :word="word" :index="index" />
 
         <!-- 空状态 -->
         <tr v-if="store.words.length === 0">

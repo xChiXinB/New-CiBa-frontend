@@ -39,7 +39,9 @@
     </td>
 
     <!-- 操作 -->
-    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6 space-x-2">
+    <td
+      class="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6 space-x-2"
+    >
       <button
         v-if="word.status === 'error'"
         @click="store.retryWord(word.id, word.text)"
@@ -94,7 +96,7 @@ watch(
         autoResize();
       });
     }
-  }
+  },
 );
 
 // 初始化时如果已经是 success 状态，也要调整高度
