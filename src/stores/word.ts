@@ -4,7 +4,7 @@
  */
 
 import { defineStore } from 'pinia';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import api from '../services/api';
 import { useNotificationStore } from './notification';
 import * as XLSX from 'xlsx';
@@ -26,6 +26,14 @@ export const useWordStore = defineStore('word', () => {
    */
   const words = ref<WordItem[]>(new Array());
   const notificationStore = useNotificationStore();
+
+  /**
+   * 计算属性：已存在单词的集合 (Set)，用于快速查找
+   * 存储的是小写形式
+   */
+  const wordSet = computed(() => {
+    return new Set(words.value.map(w => w.text.toLowerCase()));
+  });
 
   // 从 LocalStorage 加载数据
   const savedWords = localStorage.getItem('ciba_words');
@@ -54,7 +62,7 @@ export const useWordStore = defineStore('word', () => {
     if (!trimmedText) return;
 
     // 修复7: 检查是否已存在
-    if (words.value.some((w) => w.text.toLowerCase() === trimmedText)) {
+    if (wordSet.value.has(trimmedText)) {
       notificationStore.show(`单词 "${trimmedText}" 已存在`, 'warning');
       return;
     }
@@ -179,6 +187,7 @@ export const useWordStore = defineStore('word', () => {
 
   return {
     words,
+    wordSet,
     addWord,
     retryWord,
     removeWord,
