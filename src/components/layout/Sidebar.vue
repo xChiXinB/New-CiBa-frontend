@@ -70,7 +70,7 @@ const toggleCollapse = () => {
 
 const handleResize = () => {
   if (userManuallyToggled.value) return;
-  
+
   // 阈值设为 1024px (lg)
   if (window.innerWidth < 1024) {
     isCollapsed.value = true;

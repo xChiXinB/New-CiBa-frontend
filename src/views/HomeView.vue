@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full overflow-hidden relative">
     <!-- 左侧：单词列表 (始终存在) -->
-    <div 
+    <div
       class="h-full overflow-y-auto transition-all duration-500 ease-in-out bg-gray-50"
       :class="isPassageOpen ? 'w-1/2 border-r border-gray-200' : 'w-full'"
     >
@@ -41,13 +41,15 @@
     </div>
 
     <!-- 右侧：文章面板 (滑动进出) -->
-    <div 
+    <div
       class="absolute right-0 top-0 h-full w-1/2 bg-white shadow-xl transition-transform duration-500 ease-in-out transform z-10"
       :class="isPassageOpen ? 'translate-x-0' : 'translate-x-full'"
     >
       <div class="p-6 h-full overflow-y-auto">
-        <h2 class="text-xl font-bold mb-4 text-gray-800">文章阅读</h2>
-        <div class="p-10 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg h-64 flex items-center justify-center">
+        <h2 class="text-xl font-bold mb-4 text-gray-800">从文章录入</h2>
+        <div
+          class="p-10 text-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg h-64 flex items-center justify-center"
+        >
           <p>文章功能开发中...</p>
         </div>
       </div>
