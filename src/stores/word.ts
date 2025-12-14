@@ -1,9 +1,16 @@
+/**
+ * word.ts
+ * 单词 Store，用来管理单词数据
+ */
+
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import api from '../services/api';
 import { useNotificationStore } from './notification';
 import * as XLSX from 'xlsx';
+import { v4 } from 'uuid';
 
+// 定义单词对象接口
 export interface WordItem {
   id: string; // 唯一标识
   text: string; // 单词拼写
@@ -12,8 +19,12 @@ export interface WordItem {
   errorMessage?: string; // 错误信息
 }
 
+// 定义单词 Store
 export const useWordStore = defineStore('word', () => {
-  const words = ref<WordItem[]>([]);
+  /**
+   * 单词列表 WordItem[]
+   */
+  const words = ref<WordItem[]>(new Array());
   const notificationStore = useNotificationStore();
 
   // 从 LocalStorage 加载数据
@@ -48,7 +59,7 @@ export const useWordStore = defineStore('word', () => {
       return;
     }
 
-    const id = Date.now().toString() + Math.random().toString(36).substring(2);
+    const id = v4();
     const newWord: WordItem = {
       id,
       text: trimmedText,

@@ -56,16 +56,12 @@ const handlePaste = (e: ClipboardEvent) => {
 };
 
 // 保持输入框聚焦 (参考旧版逻辑)
-const handleWindowFocus = () => {
-  focusInput();
-};
-
 onMounted(() => {
   focusInput();
-  window.addEventListener('focus', handleWindowFocus);
+  window.addEventListener('focus', focusInput);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('focus', handleWindowFocus);
+  window.removeEventListener('focus', focusInput);
 });
 </script>

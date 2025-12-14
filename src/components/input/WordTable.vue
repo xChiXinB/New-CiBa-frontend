@@ -57,8 +57,8 @@
               :ref="(el) => setTextareaRef(el, word.id)"
               rows="1"
               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 resize-none overflow-hidden"
-              @input="autoResize($event.target as HTMLTextAreaElement)"
-              @focus="autoResize($event.target as HTMLTextAreaElement)"
+              @input="autoResize($event.target)"
+              @focus="autoResize($event.target)"
             ></textarea>
           </td>
 
@@ -103,22 +103,22 @@ import Icon from '../common/Icon.vue';
 const store = useWordStore();
 const textareaRefs = ref<Map<string, HTMLTextAreaElement>>(new Map());
 
-const setTextareaRef = (el: any, id: string) => {
-  if (el) {
-    textareaRefs.value.set(id, el as HTMLTextAreaElement);
-  } else {
-    textareaRefs.value.delete(id);
-  }
+const setTextareaRef = (el: unknown, id: string) => {
+  if (!(el instanceof HTMLTextAreaElement)) return;
+  textareaRefs.value.set(id, el);
 };
 
 // Textarea 高度自适应
-const autoResize = (target: HTMLTextAreaElement) => {
-  if (!target) return;
+const autoResize = (target: unknown) => {
+  if (!(target instanceof HTMLTextAreaElement)) return;
+  console.log('autoResize called for', target);
   target.style.height = 'auto';
   target.style.height = target.scrollHeight + 'px';
 };
 
 // 监听单词列表变化，当状态变为 success 时，自动调整高度
+// FIXME: 自动高度的性能太差，每次都会有不必要的调用。
+// FIXME: 最好是一个单词从非 success 变为 success 时才调用。
 watch(
   () => store.words,
   (newWords) => {
