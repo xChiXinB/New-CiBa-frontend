@@ -57,14 +57,36 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import Icon from '../common/Icon.vue';
 
 const isCollapsed = ref(false);
+const userManuallyToggled = ref(false);
 
 const toggleCollapse = () => {
   isCollapsed.value = !isCollapsed.value;
+  userManuallyToggled.value = true;
 };
+
+const handleResize = () => {
+  if (userManuallyToggled.value) return;
+  
+  // 阈值设为 1024px (lg)
+  if (window.innerWidth < 1024) {
+    isCollapsed.value = true;
+  } else {
+    isCollapsed.value = false;
+  }
+};
+
+onMounted(() => {
+  handleResize(); // 初始化时执行一次
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 
 const menuItems = computed(() => [
   { name: '查词', path: '/', icon: 'search' },
