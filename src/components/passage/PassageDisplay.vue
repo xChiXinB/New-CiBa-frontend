@@ -1,8 +1,8 @@
 <template>
-  <div class="bg-gray-50 rounded-lg border border-gray-200 p-6 min-h-[300px] text-lg leading-relaxed font-serif">
-    <template v-if="store.parsedTokens.length > 0">
+  <div class="bg-gray-50 rounded-lg border border-gray-200 p-6 min-h-75 text-lg leading-relaxed font-serif">
+    <template v-if="passageStore.parsedTokens.length > 0">
       <span
-        v-for="token in store.parsedTokens"
+        v-for="token in passageStore.parsedTokens"
         :key="token.id"
         :class="getTokenClass(token)"
         @click="handleTokenClick(token)"
@@ -21,7 +21,7 @@ import { usePassageStore } from '../../stores/passage';
 import { useWordStore } from '../../stores/word';
 import type { Token } from '../../utils/parser';
 
-const store = usePassageStore();
+const passageStore = usePassageStore();
 const wordStore = useWordStore();
 
 const getTokenClass = (token: Token) => {
