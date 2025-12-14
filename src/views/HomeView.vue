@@ -1,9 +1,15 @@
 <template>
-  <div class="flex h-full overflow-hidden relative">
-    <!-- 左侧：单词列表 (始终存在) -->
+  <div class="flex flex-col md:flex-row h-full overflow-hidden relative">
+    <!-- 左侧（移动端上方）：单词列表 -->
     <div
-      class="h-full overflow-y-auto transition-all duration-500 ease-in-out bg-gray-50"
-      :class="isPassageOpen ? 'w-1/2 border-r border-gray-200' : 'w-full'"
+      class="overflow-y-auto transition-all duration-500 ease-in-out bg-gray-50 w-full"
+      :class="[
+        // 桌面端始终全高，移动端根据状态切换高度
+        'md:h-full',
+        isPassageOpen
+          ? 'h-1/2 border-b md:border-b-0 md:w-1/2 md:border-r border-gray-200'
+          : 'h-full md:w-full',
+      ]"
     >
       <div class="p-6 max-w-6xl mx-auto">
         <div class="flex justify-between items-center mb-6">
@@ -40,10 +46,19 @@
       </div>
     </div>
 
-    <!-- 右侧：文章面板 (滑动进出) -->
+    <!-- 右侧（移动端下方）：文章面板 -->
     <div
-      class="absolute right-0 top-0 h-full w-1/2 bg-white shadow-xl transition-transform duration-500 ease-in-out transform z-10"
-      :class="isPassageOpen ? 'translate-x-0' : 'translate-x-full'"
+      class="absolute bg-white shadow-xl transition-transform duration-500 ease-in-out transform z-10"
+      :class="[
+        // 移动端定位：底部，半高，全宽
+        'bottom-0 left-0 w-full h-1/2',
+        // 桌面端定位：右侧，全高，半宽
+        'md:top-0 md:right-0 md:w-1/2 md:h-full',
+        // 动画状态
+        isPassageOpen
+          ? 'translate-y-0 md:translate-x-0'
+          : 'translate-y-full md:translate-y-0 md:translate-x-full',
+      ]"
     >
       <div class="p-6 h-full overflow-y-auto">
         <h2 class="text-xl font-bold mb-4 text-gray-800">从文章录入</h2>
