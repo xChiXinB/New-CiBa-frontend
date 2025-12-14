@@ -1,19 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import InputView from '../views/InputView.vue';
+import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'input',
-      component: InputView,
+      name: 'home',
+      component: HomeView,
     },
     {
       path: '/passage',
       name: 'passage',
-      // 路由懒加载
-      component: () => import('../views/PassageView.vue'),
+      component: HomeView,
     },
   ],
 });
