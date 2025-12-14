@@ -47,7 +47,7 @@
     >
       <div class="p-6 h-full overflow-y-auto flex flex-col">
         <h2 class="text-xl font-bold mb-4 text-gray-800 shrink-0">从文章录入</h2>
-        
+
         <!-- 文章输入框 -->
         <div class="shrink-0">
           <PassageInput />

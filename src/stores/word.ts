@@ -32,7 +32,7 @@ export const useWordStore = defineStore('word', () => {
    * 存储的是小写形式
    */
   const wordSet = computed(() => {
-    return new Set(words.value.map(w => w.text.toLowerCase()));
+    return new Set(words.value.map((w) => w.text.toLowerCase()));
   });
 
   // 从 LocalStorage 加载数据

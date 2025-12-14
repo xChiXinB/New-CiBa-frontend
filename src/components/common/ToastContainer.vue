@@ -4,14 +4,7 @@
     class="pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-end sm:p-6 z-50"
   >
     <div class="flex w-full flex-col items-center space-y-4 sm:items-end">
-      <TransitionGroup
-        enter-active-class="transform ease-out duration-300 transition"
-        enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
-        enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
-        leave-active-class="transition ease-in duration-100"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
-      >
+      <TransitionGroup name="notification">
         <ToastItem
           v-for="notification in store.notifications"
           :key="notification.id"
@@ -30,3 +23,22 @@ import ToastItem from './ToastItem.vue';
 
 const store = useNotificationStore();
 </script>
+
+<style scoped>
+.notification-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.notification-enter-from {
+  transform: translateY(0.5rem);
+  opacity: 0;
+}
+
+.notification-leave-to {
+  opacity: 0;
+}
+
+.notification-leave-active {
+  transition: all 0.1s ease-in;
+}
+</style>
