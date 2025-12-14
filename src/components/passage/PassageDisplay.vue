@@ -26,7 +26,7 @@ const passageStore = usePassageStore();
 const wordStore = useWordStore();
 
 const getTokenClass = (token: Token) => {
-  if (!token.isWord) return 'text-gray-500 select-none'; // 非单词
+  if (!token.isWord) return 'text-gray-500'; // 非单词
 
   const isExisted = wordStore.wordSet.has(token.text.toLowerCase());
 
