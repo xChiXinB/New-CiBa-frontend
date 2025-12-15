@@ -6,24 +6,26 @@
       </label>
       <button
         v-if="store.text"
-        @click="store.setText('')"
-        class="text-xs text-red-500 hover:text-red-700 hover:underline transition-colors"
+        @click="store.setText(''); notification.show('已清空文章！')"
+        class="text-sm text-blue-600 font-extrabold hover:underline transition-colors"
+        title="清空文章内容"
       >
-        清空文章
+        清空
       </button>
     </div>
-    <textarea
+    <input
       id="passage-input"
       v-model="store.text"
-      rows="4"
-      class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-3 border resize-y"
+      class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-3 focus:ring-blue-500 focus:outline-none sm:text-sm p-3 border"
       placeholder="请在此粘贴文章，它们将显示于下方..."
-    ></textarea>
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { usePassageStore } from '../../stores/passage';
+import { useNotificationStore } from '../../stores/notification';
 
 const store = usePassageStore();
+const notification = useNotificationStore();
 </script>
