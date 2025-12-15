@@ -1,5 +1,8 @@
 <template>
-  <tr class="hover:bg-gray-50 transition-colors">
+  <tr 
+    class="hover:bg-gray-50 transition-colors"
+    :class="{ 'opacity-0': word.isAnimating }"
+  >
     <!-- 序号 -->
     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
       {{ index + 1 }}
@@ -15,7 +18,7 @@
           @keydown.enter="store.retryWord(word.id, word.text)"
         />
       </div>
-      <span v-else>{{ word.text }}</span>
+      <span :data-id="word.id" v-else>{{ word.text }}</span>
     </td>
 
     <!-- 释义 (可编辑) -->

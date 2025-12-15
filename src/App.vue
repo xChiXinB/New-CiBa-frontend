@@ -2,6 +2,7 @@
 import { RouterView } from 'vue-router';
 import Sidebar from './components/layout/Sidebar.vue';
 import ToastContainer from './components/common/ToastContainer.vue';
+import FlyingElementLayer from './components/common/FlyingElementLayer.vue';
 </script>
 
 <template>
@@ -16,6 +17,8 @@ import ToastContainer from './components/common/ToastContainer.vue';
 
     <!-- 全局通知容器 -->
     <ToastContainer />
+    <!-- 飞入动画层 -->
+    <FlyingElementLayer />
   </div>
 </template>
 

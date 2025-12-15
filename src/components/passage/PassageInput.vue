@@ -13,12 +13,12 @@
         清空
       </button>
     </div>
-    <input
+    <textarea
       id="passage-input"
       v-model="store.text"
-      class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-3 focus:ring-blue-500 focus:outline-none sm:text-sm p-3 border"
+      class="block w-full h-20 rounded-lg border-gray-300 shadow-sm focus:border-blue-600 focus:ring-3 focus:ring-blue-500 focus:outline-none sm:text-sm p-3 border resize-none"
       placeholder="请在此粘贴文章，它们将显示于下方..."
-    />
+    ></textarea>
   </div>
 </template>
 

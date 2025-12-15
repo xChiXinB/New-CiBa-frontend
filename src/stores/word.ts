@@ -17,6 +17,7 @@ export interface WordItem {
   translation: string; // 释义
   status: 'loading' | 'success' | 'error'; // 状态
   errorMessage?: string; // 错误信息
+  isAnimating?: boolean; // 是否正在进行飞入动画
 }
 
 // 定义单词 Store
@@ -56,15 +57,18 @@ export const useWordStore = defineStore('word', () => {
 
   /**
    * 添加单词并自动查询
+   * @param text 单词文本
+   * @param options 可选参数，如 isAnimating
+   * @returns 新单词的 ID，如果添加失败返回 null
    */
-  async function addWord(text: string) {
+  function addWord(text: string, options?: { isAnimating?: boolean }) {
     const trimmedText = text.trim().toLowerCase(); // 修复8: 强制小写
-    if (!trimmedText) return;
+    if (!trimmedText) return null;
 
-    // 修复7: 检查是否已存在
+    // 检查是否已存在
     if (wordSet.value.has(trimmedText)) {
       notificationStore.show(`单词 "${trimmedText}" 已存在`, 'warning');
-      return;
+      return null;
     }
 
     const id = v4();
@@ -73,27 +77,44 @@ export const useWordStore = defineStore('word', () => {
       text: trimmedText,
       translation: '',
       status: 'loading',
+      isAnimating: options?.isAnimating || false,
     };
 
-    // 修复1: 插入到列表最后面 (push)
+    // 插入到列表最后面 (push)
     words.value.push(newWord);
 
-    try {
-      const result = await api.fetchTranslation(trimmedText);
-      // 更新释义
-      const index = words.value.findIndex((w) => w.id === id);
-      if (index !== -1 && words.value[index]) {
-        words.value[index].translation = result.data.translation;
-        words.value[index].status = 'success';
-        notificationStore.show(`查询成功: ${trimmedText}`, 'success');
+    // 异步查询，不阻塞返回 ID
+    async function queryTranslation() {
+      try {
+        const result = await api.fetchTranslation(trimmedText);
+        // 更新释义
+        const index = words.value.findIndex((w) => w.id === id);
+        if (index !== -1 && words.value[index]) {
+          words.value[index].translation = result.data.translation;
+          words.value[index].status = 'success';
+          notificationStore.show(`查询成功: ${trimmedText}`, 'success');
+        }
+      } catch (error: any) {
+        const index = words.value.findIndex((w) => w.id === id);
+        if (index !== -1 && words.value[index]) {
+          words.value[index].status = 'error';
+          words.value[index].errorMessage = error.message;
+          notificationStore.show(`查询失败: ${trimmedText}`, 'error');
+        }
       }
-    } catch (error: any) {
-      const index = words.value.findIndex((w) => w.id === id);
-      if (index !== -1 && words.value[index]) {
-        words.value[index].status = 'error';
-        words.value[index].errorMessage = error.message;
-        notificationStore.show(`查询失败: ${trimmedText}`, 'error');
-      }
+    }
+    queryTranslation();
+
+    return id;
+  }
+
+  /**
+   * 结束动画状态
+   */
+  function finishAnimation(id: string) {
+    const index = words.value.findIndex((w) => w.id === id);
+    if (index !== -1 && words.value[index]) {
+      words.value[index].isAnimating = false;
     }
   }
 
@@ -189,6 +210,7 @@ export const useWordStore = defineStore('word', () => {
     words,
     wordSet,
     addWord,
+    finishAnimation,
     retryWord,
     removeWord,
     clearAll,

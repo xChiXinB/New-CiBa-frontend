@@ -1,0 +1,73 @@
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
+
+export interface FlyingElement {
+  id: string;
+  text: string;
+  startX: number;
+  startY: number;
+  targetX: number;
+  targetY: number;
+  duration: number;
+  onComplete?: () => void;
+}
+
+export const useAnimationStore = defineStore('animation', () => {
+  const flyingElements = ref<FlyingElement[]>([]);
+
+  /**
+   * 开始一个飞入动画
+   * @param text 文本内容
+   * @param startRect 起始位置 (DOMRect)
+   * @param targetRect 目标位置 (DOMRect)
+   * @param onComplete 动画完成后的回调
+   */
+  function startFlying(
+    text: string,
+    startRect: { left: number; top: number; width: number; height: number },
+    targetRect: { left: number; top: number; width: number; height: number },
+    onComplete?: () => void
+  ) {
+    const id = uuidv4();
+    
+    // 计算中心点，以便定位
+    // 我们通常希望元素的左上角对齐，或者中心对齐。
+    // 这里假设我们传递的是元素的中心点或者左上角。
+    // 为了简单，我们直接使用 left/top 作为起始和结束坐标。
+    
+    const element: FlyingElement = {
+      id,
+      text,
+      startX: startRect.left,
+      startY: startRect.top,
+      targetX: targetRect.left,
+      targetY: targetRect.top,
+      duration: 3000, // 动画持续时间 ms
+      onComplete,
+    };
+
+    flyingElements.value.push(element);
+
+    // // 自动清理逻辑通常由组件处理（动画结束后调用 remove）
+    // // 或者我们可以设置一个定时器作为保险
+    // setTimeout(() => {
+    //   removeFlyingElement(id);
+    // }, element.duration + 100);
+  }
+
+  function removeFlyingElement(id: string) {
+    const index = flyingElements.value.findIndex((e) => e.id === id);
+    if (index === -1) return;
+    const element = flyingElements.value[index];
+    if (!element) return;
+    element.onComplete?.();
+    flyingElements.value.splice(index, 1);
+  }
+
+  return {
+    flyingElements,
+    startFlying,
+    removeFlyingElement,
+  };
+});

@@ -1,5 +1,8 @@
 <template>
-  <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+  <div 
+    ref="tableContainer"
+    class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm max-h-[calc(100vh-300px)] overflow-y-auto"
+  >
     <table class="min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-50">
         <tr>
@@ -19,7 +22,13 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 bg-white">
-        <WordRow v-for="(word, index) in store.words" :key="word.id" :word="word" :index="index" />
+        <!-- 为WordRow绑定data-id属性，方便querySelector方法读取 -->
+        <WordRow 
+          v-for="(word, index) in store.words" 
+          :key="word.id" 
+          :word="word" 
+          :index="index" 
+        />
 
         <!-- 空状态 -->
         <tr v-if="store.words.length === 0">
@@ -35,6 +44,25 @@
 <script setup lang="ts">
 import { useWordStore } from '../../stores/word';
 import WordRow from './WordRow.vue';
+import { ref, watch, nextTick } from 'vue';
 
 const store = useWordStore();
+const tableContainer = ref<HTMLElement | null>(null);
+
+// 自动滚动到底部
+watch(
+  () => store.words.length,
+  (newLen, oldLen) => {
+    if (newLen > oldLen) {
+      nextTick(() => {
+        if (tableContainer.value) {
+          tableContainer.value.scrollTo({
+            top: tableContainer.value.scrollHeight,
+            behavior: 'instant',
+          });
+        }
+      });
+    }
+  }
+);
 </script>
