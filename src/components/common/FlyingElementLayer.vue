@@ -7,6 +7,7 @@ const store = useAnimationStore();
 
 <template>
   <div class="pointer-events-none fixed inset-0 z-9999">
+    <!-- removeFlyingElement，移除AnimationStore数据，随即移除DOM -->
     <FlyingItem
       v-for="item in store.flyingElements"
       :key="item.id"

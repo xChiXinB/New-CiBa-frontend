@@ -83,6 +83,9 @@ const handleTokenClick = async (token: Token, event: MouseEvent) => {
     token.text,
     startRect,
     targetRect,
+    /**
+     * onComplete 回调，通知 wordStore 动画结束
+     */
     () => {
       // 6. 动画结束，显示真实行
       wordStore.finishAnimation(id);
