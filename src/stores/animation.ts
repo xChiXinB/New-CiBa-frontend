@@ -36,7 +36,7 @@ export const useAnimationStore = defineStore('animation', () => {
       startX: startRect.left,
       startY: startRect.top,
       targetID: targetID,
-      duration: 3000, // 动画持续时间 ms
+      duration: 600, // 动画持续时间 ms
       onComplete,
     };
 
