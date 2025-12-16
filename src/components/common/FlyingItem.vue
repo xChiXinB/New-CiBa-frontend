@@ -8,6 +8,7 @@ import { useWordStore } from '@/stores/word';
 import { nextTick } from 'vue';
 
 const wordStore = useWordStore();
+let finishTimeout: number | undefined;
 
 const props = defineProps<{
   item: FlyingElement;
@@ -36,6 +37,11 @@ function updateTargetLocation(): void {
   const spanRect = targetSpan.getBoundingClientRect();
   flyingElementStyle.value.left = spanRect.left + 'px';
   flyingElementStyle.value.top = spanRect.top + 'px';
+
+  clearTimeout(finishTimeout);
+  finishTimeout = window.setTimeout(() => {
+    emit('complete');
+  }, props.item.duration);
 }
 
 onMounted(() => {
@@ -48,7 +54,7 @@ onMounted(() => {
   });
 
   // Set timeout to emit complete
-  setTimeout(() => {
+  finishTimeout = setTimeout(() => {
     emit('complete');
   }, props.item.duration);
 });
