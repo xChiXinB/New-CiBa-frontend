@@ -7,8 +7,7 @@ export interface FlyingElement {
   text: string;
   startX: number;
   startY: number;
-  targetX: number;
-  targetY: number;
+  targetID: string;
   duration: number;
   onComplete?: () => void;
 }
@@ -23,27 +22,21 @@ export const useAnimationStore = defineStore('animation', () => {
    * @param targetRect 目标位置 (DOMRect)
    * @param onComplete 动画完成后的回调
    */
-  function startFlying(
+  function applyFlyingElement(
     text: string,
     startRect: { left: number; top: number; width: number; height: number },
-    targetRect: { left: number; top: number; width: number; height: number },
-    onComplete?: () => void
+    targetID: string,
+    onComplete?: () => void,
   ) {
     const id = uuidv4();
-    
-    // 计算中心点，以便定位
-    // 我们通常希望元素的左上角对齐，或者中心对齐。
-    // 这里假设我们传递的是元素的中心点或者左上角。
-    // 为了简单，我们直接使用 left/top 作为起始和结束坐标。
-    
+
     const element: FlyingElement = {
       id,
       text,
       startX: startRect.left,
       startY: startRect.top,
-      targetX: targetRect.left,
-      targetY: targetRect.top,
-      duration: 3000, // 动画持续时间 ms
+      targetID: targetID,
+      duration: 600, // 动画持续时间 ms
       onComplete,
     };
 
@@ -67,7 +60,7 @@ export const useAnimationStore = defineStore('animation', () => {
 
   return {
     flyingElements,
-    startFlying,
+    applyFlyingElement,
     removeFlyingElement,
   };
 });

@@ -59,37 +59,37 @@ const handleTokenClick = async (token: Token, event: MouseEvent) => {
     width: rect.width,
     height: rect.height,
   };
-  
-  // 3. 等待 DOM 更新 (表格行被渲染)
-  await nextTick();
 
-  // 4. 计算目标位置
-  const rowElement = document.querySelector(`span[data-id="${id}"]`);
-  if (!rowElement) return;
-  
-  let targetRect;
-  const rowRect = rowElement.getBoundingClientRect();
-  // 目标位置设为行的中心，或者单词列的位置
-  // 这里简单设为行的左侧位置
-  targetRect = {
-    left: rowRect.left, // 稍微偏移
-    top: rowRect.top,
-    width: rowRect.width,
-    height: rowRect.height,
-  };
-
-  // 5. 开始飞入动画
-  animationStore.startFlying(
-    token.text,
+  // 3. 注册飞行的元素
+  animationStore.applyFlyingElement(
+    token.text.toLowerCase(),
     startRect,
-    targetRect,
+    id,
     /**
      * onComplete 回调，通知 wordStore 动画结束
      */
     () => {
       // 6. 动画结束，显示真实行
       wordStore.finishAnimation(id);
-    }
+    },
   );
+
+  // // 3. 等待 DOM 更新 (表格行被渲染)
+  // await nextTick();
+
+  // // 4. 计算目标位置
+  // const rowElement = document.querySelector(`span[data-id="${id}"]`);
+  // if (!rowElement) return;
+
+  // let targetRect;
+  // const rowRect = rowElement.getBoundingClientRect();
+  // // 目标位置设为行的中心，或者单词列的位置
+  // // 这里简单设为行的左侧位置
+  // targetRect = {
+  //   left: rowRect.left,
+  //   top: rowRect.top,
+  //   width: rowRect.width,
+  //   height: rowRect.height,
+  // };
 };
 </script>

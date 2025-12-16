@@ -1,12 +1,13 @@
 <template>
   <div class="mb-6">
     <div class="flex justify-between items-center mb-2">
-      <label for="passage-input" class="block text-sm font-medium text-gray-700">
-        输入文章
-      </label>
+      <label for="passage-input" class="block text-sm font-medium text-gray-700"> 输入文章 </label>
       <button
         v-if="store.text"
-        @click="store.setText(''); notification.show('已清空文章！')"
+        @click="
+          store.setText('');
+          notification.show('已清空文章！');
+        "
         class="text-sm text-blue-600 font-extrabold hover:underline transition-colors"
         title="清空文章内容"
       >

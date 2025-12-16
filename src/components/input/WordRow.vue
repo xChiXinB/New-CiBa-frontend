@@ -1,8 +1,5 @@
 <template>
-  <tr 
-    class="hover:bg-gray-50 transition-colors"
-    :class="{ 'opacity-0': word.isAnimating }"
-  >
+  <tr class="hover:bg-gray-50 transition-colors" ref="tableRow">
     <!-- 序号 -->
     <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-500 sm:pl-6">
       {{ index + 1 }}
@@ -18,7 +15,9 @@
           @keydown.enter="store.retryWord(word.id, word.text)"
         />
       </div>
-      <span :data-id="word.id" v-else>{{ word.text }}</span>
+      <span :data-id="word.id" :class="{ 'opacity-0 select-none': word.isAnimating }" v-else>{{
+        word.text
+      }}</span>
     </td>
 
     <!-- 释义 (可编辑) -->
@@ -78,6 +77,8 @@ const props = defineProps<{
 const store = useWordStore();
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
 
+const tableRow = ref<HTMLTableRowElement>();
+
 // Textarea 高度自适应
 const autoResize = () => {
   const el = textareaRef.value;
@@ -89,6 +90,12 @@ const autoResize = () => {
 const handleInput = () => {
   autoResize();
 };
+
+function goIntoView(): void {
+  tableRow.value?.scrollIntoView({
+    behavior: 'instant',
+  });
+}
 
 // 监听状态变化，当变为 success 时自动调整高度
 watch(
@@ -104,6 +111,7 @@ watch(
 
 // 初始化时如果已经是 success 状态，也要调整高度
 onMounted(() => {
+  goIntoView();
   if (props.word.status === 'success') {
     nextTick(() => {
       autoResize();
