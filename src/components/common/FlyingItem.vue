@@ -22,7 +22,7 @@ const flyingElementStyle = ref<CSSProperties>({
   top: `${props.item.startY}px`,
   opacity: '1',
   transform: 'scale(1)',
-  transition: `all ${props.item.duration}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
+  transition: `all ${props.item.duration}ms cubic-bezier(0.22, 1, 0.36, 1)`,
 });
 
 /**
