@@ -92,7 +92,23 @@ const handleInput = () => {
   autoResize();
 };
 
-function goIntoView(): void {
+/**
+ * 将当前行滚动到可视区域
+ * @param strict 可选，默认为false。是否严格等待下一次 DOM 更新和浏览器渲染
+ */
+async function goIntoView(strict?: boolean) {
+  // 默认不严格
+  strict = strict ?? false;
+
+  if (strict) {
+    requestAnimationFrame(() => {
+      tableRow.value?.scrollIntoView({
+        behavior: 'instant',
+      });
+    });
+    // 直接返回
+    return;
+  }
   tableRow.value?.scrollIntoView({
     behavior: 'instant',
   });
@@ -102,6 +118,7 @@ function goIntoView(): void {
 watch(
   () => props.word.status,
   (newStatus, oldStatus) => {
+    goIntoView(true);
     if (newStatus === 'success' && oldStatus !== 'success') {
       nextTick(() => {
         autoResize();
@@ -115,6 +132,7 @@ onMounted(() => {
   goIntoView();
   if (props.word.status === 'success') {
     nextTick(() => {
+      goIntoView();
       autoResize();
     });
   }
