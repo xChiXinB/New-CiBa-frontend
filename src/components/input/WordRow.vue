@@ -6,7 +6,10 @@
     </td>
 
     <!-- 单词 -->
-    <td class="whitespace-nowrap px-3 py-4 text-sm font-bold text-gray-900">
+    <td
+      class="whitespace-nowrap px-3 py-4 text-sm font-bold text-gray-900"
+      :class="{ 'opacity-0 select-none': word.isAnimating }"
+    >
       <div v-if="word.status === 'error'">
         <input
           type="text"
@@ -15,9 +18,7 @@
           @keydown.enter="store.retryWord(word.id, word.text)"
         />
       </div>
-      <span :data-id="word.id" :class="{ 'opacity-0 select-none': word.isAnimating }" v-else>{{
-        word.text
-      }}</span>
+      <span :data-id="word.id" v-else>{{ word.text }}</span>
     </td>
 
     <!-- 释义 (可编辑) -->
