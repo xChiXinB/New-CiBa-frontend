@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-gray-50 rounded-lg border border-gray-200 p-6 min-h-75 text-lg leading-relaxed font-serif relative"
+    class="bg-gray-50 rounded-lg border border-gray-200 p-6 min-h-75 text-lg leading-relaxed font-serif relative whitespace-pre-wrap"
   >
     <template v-if="passageStore.parsedTokens.length > 0">
       <span
