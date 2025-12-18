@@ -7,6 +7,7 @@ import { defineStore } from 'pinia';
 import { ref, watch, computed } from 'vue';
 import api from '../services/api';
 import { useNotificationStore } from './notification';
+import { useAnimationStore } from './animation';
 import * as XLSX from 'xlsx';
 import { v4 } from 'uuid';
 
@@ -27,6 +28,7 @@ export const useWordStore = defineStore('word', () => {
    */
   const words = ref<WordItem[]>(new Array());
   const notificationStore = useNotificationStore();
+  const animationStore = useAnimationStore();
 
   /**
    * 计算属性：已存在单词的集合 (Set)，用于快速查找
@@ -165,8 +167,12 @@ export const useWordStore = defineStore('word', () => {
     if (index !== -1 && words.value[index]) {
       const removedWord = words.value[index].text;
       words.value.splice(index, 1);
-      // 修复5: 删除通知
+
       notificationStore.show(`已删除单词: ${removedWord}`, 'info');
+      // 同时移除相关动画元素
+      const flyingElementId = animationStore.flyingElements.find((e) => e.text === removedWord)?.id;
+      if (!flyingElementId) return;
+      animationStore.removeFlyingElement(flyingElementId);
     }
   }
 
@@ -176,6 +182,8 @@ export const useWordStore = defineStore('word', () => {
   function clearAll() {
     words.value = [];
     notificationStore.show('列表已清空', 'info');
+
+    animationStore.flyingElements = []; // 清空所有动画元素
   }
 
   /**

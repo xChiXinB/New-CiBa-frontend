@@ -36,17 +36,13 @@ export const useAnimationStore = defineStore('animation', () => {
       startX: startRect.left,
       startY: startRect.top,
       targetID: targetID,
-      duration: 600, // 动画持续时间 ms
+      // 动画持续时间 ms
+      duration: 600, // 生产环境
+      // duration: 60000, // 开发环境
       onComplete,
     };
 
     flyingElements.value.push(element);
-
-    // // 自动清理逻辑通常由组件处理（动画结束后调用 remove）
-    // // 或者我们可以设置一个定时器作为保险
-    // setTimeout(() => {
-    //   removeFlyingElement(id);
-    // }, element.duration + 100);
   }
 
   function removeFlyingElement(id: string) {
