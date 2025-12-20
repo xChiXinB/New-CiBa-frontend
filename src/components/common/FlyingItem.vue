@@ -19,10 +19,10 @@ const emit = defineEmits<{
 }>();
 
 const flyingElementStyle = ref<CSSProperties>({
-  left: `${props.item.startX}px`,
-  top: `${props.item.startY}px`,
+  left: '0px',
+  top: '0px',
   opacity: '1',
-  transform: 'scale(1)',
+  transform: `translate(${props.item.startX}px, ${props.item.startY}px)`,
   transition: `all ${props.item.duration}ms cubic-bezier(0.22, 1, 0.36, 1)`,
 });
 
@@ -35,8 +35,7 @@ function updateTargetLocation(): void {
   if (!(targetSpan instanceof HTMLSpanElement)) return;
 
   const spanRect = targetSpan.getBoundingClientRect();
-  flyingElementStyle.value.left = spanRect.left + 'px';
-  flyingElementStyle.value.top = spanRect.top + 'px';
+  flyingElementStyle.value.transform = `translate(${spanRect.left}px, ${spanRect.top}px)`;
 
   clearTimeout(finishTimeout);
   finishTimeout = window.setTimeout(() => {
@@ -72,6 +71,6 @@ onMounted(() => {
 <style scoped>
 /* Ensure hardware acceleration */
 div {
-  will-change: left, top, transform, opacity;
+  will-change: transform, opacity;
 }
 </style>

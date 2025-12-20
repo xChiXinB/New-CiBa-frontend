@@ -37,8 +37,8 @@ export const useAnimationStore = defineStore('animation', () => {
       startY: startRect.top,
       targetID: targetID,
       // 动画持续时间 ms
-      duration: 600, // 生产环境
-      // duration: 60000, // 开发环境
+      // duration: 600, // 生产环境
+      duration: 3000, // 开发环境
       onComplete,
     };
 
